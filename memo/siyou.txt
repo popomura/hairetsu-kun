@@ -1,0 +1,25 @@
+- 'objBox'（オブジェクト）のコンポーネント内で、items（キー&値）のコンポーネントがある
+   - objBoxを増やすmap()の中に、propertyBoxを増やすmap()があればよいのでは？
+
+- データの持ち方
+   - 「+」を押すと、itemが増える
+   - 「配列を増やす」を押すと、items自体が増える
+
+const objBox = [
+   [
+      {
+         keyBox: hogehoge,
+         valueBox: fugafuaga
+      },
+      {
+         keyBox: hogehoge,
+         valueBox: fugafuga
+      }
+   ],
+[
+      {
+         keyBox: hogehoge,
+         valueBox: fugafuaga
+      }
+   ]
+]
