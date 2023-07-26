@@ -2,38 +2,44 @@ import { NextPage } from "next";
 import { useState } from "react";
 
 const Test: NextPage = () => {
-  const [box, setBox] = useState<string>("const");
-  const [name, setName] = useState<string>("name");
-
-  const boxInput = (e: any) => {
-    setBox(e.target.value);
-  };
-
-  const nameInput = (e: any) => {
-    setName(e.target.value);
-  };
-
-  const [array, setArray] = useState<
-    Array<Array<{ key: string; value: string }>>
-  >([
-    [
-      {
-        key: "",
-        value: "",
-      },
+  const [formData, setFormData] = useState<{
+    box: string;
+    name: string;
+    array: Array<Array<{ key: string; value: string }>>;
+  }>({
+    box: "const",
+    name: "name",
+    array: [
+      [
+        {
+          key: "",
+          value: "",
+        },
+      ],
     ],
-  ]);
+  });
+
+  const boxInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, box: e.target.value });
+  };
+
+  const nameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, name: e.target.value });
+  };
 
   const addProperty = (index: number) => {
-    setArray((prevArray) => {
-      const newArray = [...prevArray];
+    setFormData((prevData) => {
+      const newArray = [...prevData.array];
       newArray[index] = [...newArray[index], { key: "", value: "" }];
-      return newArray;
+      return { ...prevData, array: newArray };
     });
   };
 
   const addObj = () => {
-    setArray((prevArray) => [...prevArray, [{ key: "", value: "" }]]);
+    setFormData((prevData) => ({
+      ...prevData,
+      array: [...prevData.array, [{ key: "", value: "" }]],
+    }));
   };
 
   const keyBoxInput = (
@@ -42,10 +48,10 @@ const Test: NextPage = () => {
     childIndex: number
   ) => {
     const newKey = e.target.value;
-    setArray((prevArray) => {
-      const newArray = [...prevArray];
+    setFormData((prevData) => {
+      const newArray = [...prevData.array];
       newArray[parentIndex][childIndex].key = newKey;
-      return newArray;
+      return { ...prevData, array: newArray };
     });
   };
 
@@ -55,26 +61,37 @@ const Test: NextPage = () => {
     childIndex: number
   ) => {
     const newValue = e.target.value;
-    setArray((prevArray) => {
-      const newArray = [...prevArray];
+    setFormData((prevData) => {
+      const newArray = [...prevData.array];
       newArray[parentIndex][childIndex].value = newValue;
-      return newArray;
+      return { ...prevData, array: newArray };
     });
   };
 
-  const formatArray = (
-    arr: Array<Array<{ key: string; value: string }>>,
-    box: string,
-    name: string
-  ) => {
-    return `${box} ${name} = ${JSON.stringify(
-      arr.map((nestedArray) =>
+  const formatArray = (data: typeof formData) => {
+    return `${data.box} ${data.name} = ${JSON.stringify(
+      data.array.map((nestedArray) =>
         nestedArray.reduce((acc, obj) => ({ ...acc, [obj.key]: obj.value }), {})
       )
     )}`;
   };
 
-  const formattedArray = formatArray(array, box, name);
+  const formattedArray = formatArray(formData);
+
+  const renderObject = (obj: { [key: string]: string }) => {
+    return (
+      <>
+        {"{"}
+        {Object.entries(obj).map(([key, value], index) => (
+          <span key={index}>
+            {index > 0 && ", "}
+            {key}: {value}
+          </span>
+        ))}
+        {"}"}
+      </>
+    );
+  };
 
   return (
     <>
@@ -83,13 +100,13 @@ const Test: NextPage = () => {
         <div>
           <input
             type="text"
-            value={box}
+            value={formData.box}
             className="bg-gray-500 color-white inline-block w-20 mx-1 hover:bg-gray-400 text-center"
             onChange={boxInput}
           />
           <input
             type="text"
-            value={name}
+            value={formData.name}
             className="bg-gray-500 color-white inline-block w-40 mx-1 hover:bg-gray-400 text-center"
             onChange={nameInput}
           />
@@ -97,7 +114,7 @@ const Test: NextPage = () => {
         </div>
 
         <div className="ml-4">
-          {array.map((nestedArray, parentIndex) => (
+          {formData.array.map((nestedArray, parentIndex) => (
             <div key={parentIndex}>
               <div className="text-pink-500">{"{"}</div>
               <div className="pl-4">
@@ -127,7 +144,7 @@ const Test: NextPage = () => {
                 <div>
                   <button
                     onClick={() => addProperty(parentIndex)}
-                    className="text-white hover:opacity-70"
+                    className="mt-1 p-1 bg-gray-600 text-white"
                   >
                     +
                   </button>
@@ -163,3 +180,4 @@ const Test: NextPage = () => {
 };
 
 export default Test;
+
