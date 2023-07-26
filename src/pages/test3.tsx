@@ -2,16 +2,18 @@ import { NextPage } from "next";
 import { useState } from "react";
 
 const Test: NextPage = () => {
-  const [box, setBox] = useState<string>("const");
+
+  const [box, setBox] = useState<string>("const")
   const [name, setName] = useState<string>("name");
 
-  const boxInput = (e: any) => {
-    setBox(e.target.value);
-  };
+  const boxInput = (e:any) => {
+   setBox(e.target.value) 
+  }
 
-  const nameInput = (e: any) => {
+  const nameInput = (e:any) => {
     setName(e.target.value);
   };
+
 
   const [array, setArray] = useState<
     Array<Array<{ key: string; value: string }>>
@@ -62,18 +64,16 @@ const Test: NextPage = () => {
     });
   };
 
-  const formatArray = (
-    arr: Array<Array<{ key: string; value: string }>>,
-    box: string,
-    name: string
-  ) => {
-    return `${box} ${name} = ${JSON.stringify(
-      arr.map((nestedArray) =>
-        nestedArray.reduce((acc, obj) => ({ ...acc, [obj.key]: obj.value }), {})
-      )
-    )}`;
-  };
-
+ const formatArray = (
+   arr: Array<Array<{ key: string; value: string }>>,
+   box: string,
+   name: string
+ ) => {
+   return `${box} ${name} = ${JSON.stringify(arr.map((nestedArray) =>
+    nestedArray.reduce((acc, obj) => ({ ...acc, [obj.key]: obj.value }), {})
+  ))}`
+ };
+  
   const formattedArray = formatArray(array, box, name);
 
   return (
@@ -127,7 +127,7 @@ const Test: NextPage = () => {
                 <div>
                   <button
                     onClick={() => addProperty(parentIndex)}
-                    className="text-white hover:opacity-70"
+                    className="mt-1 p-1 bg-gray-600 text-white"
                   >
                     +
                   </button>
@@ -155,7 +155,9 @@ const Test: NextPage = () => {
       </div>
 
       <div className="mt-5">
-        <div className="font-bold text-24">最終アウトプット</div>
+        <div className="font-bold text-24">
+          最終アウトプット
+        </div>
         <div>{formattedArray}</div>
       </div>
     </>
